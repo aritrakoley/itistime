@@ -1,0 +1,15 @@
+// See https://containers.dev/implementors/json_reference/ for configuration reference
+{
+	"name": "Timerrr",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"remoteUser": "node",
+	"postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}",
+	"features": {
+		"ghcr.io/devcontainers/features/git:1": {
+			"ppa": true,
+			"version": "latest"
+		}
+	}
+}
