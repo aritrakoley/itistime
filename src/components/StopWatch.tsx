@@ -117,7 +117,7 @@ const StopWatch = () => {
             </div>
             <div>
                 <pre>
-                    {`Details:\nstatus:           ${timerStatus}\nlatestResumeTime: ${new Date(latestStartTimeRef.current)}\ntotalElapsedTime: ${ms2HMS(totalElapsedTimeRef.current, true)}\nelapsedTime:      ${ms2HMS(elapsedTimeRef.current, true)}\ndisplayTime:      ${JSON.stringify(displayTime)}
+                    {`Details: StopWatch\nstatus:           ${timerStatus}\nlatestResumeTime: ${new Date(latestStartTimeRef.current)}\ntotalElapsedTime: ${ms2HMS(totalElapsedTimeRef.current, true)}\nelapsedTime:      ${ms2HMS(elapsedTimeRef.current, true)}\ndisplayTime:      ${JSON.stringify(displayTime)}
                     `}
                 </pre>
             </div>
