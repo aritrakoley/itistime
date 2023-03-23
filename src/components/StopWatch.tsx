@@ -82,7 +82,7 @@ const StopWatch = () => {
 
     return (
         <div style={{ display: 'flex' }}>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', minWidth: '200px' }}>
                 <div>{hms2String(displayTime)}</div>
                 <div style={{ display: 'flex', gap: 5 }}>
                     {timerStatus === "init" && <button onClick={startTimer}>Start</button>}
