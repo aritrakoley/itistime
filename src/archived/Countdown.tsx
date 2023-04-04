@@ -9,8 +9,6 @@ type DisplayTimeType = {
 
 type TimerStatusType = "init" | "running" | "paused"
 
-type LapType = { id: number, laptime: DisplayTimeType }
-
 const INIT_DISPLAY_TIME: DisplayTimeType = {
     hours: 0,
     minutes: 0,

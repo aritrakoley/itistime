@@ -1,10 +1,9 @@
-import StopWatch from "./components/StopWatch"
-import Countdown from "./components/Countdown"
+
+import PomodoroTimer from "./components/PomodoroTimer"
 
 const App = () => {
   return <div style={{ display: 'flex', flexDirection: 'column' }}>
-    <StopWatch />
-    <Countdown />
+    <PomodoroTimer />
   </div>
 }
 
