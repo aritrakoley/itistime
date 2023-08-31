@@ -1,10 +1,12 @@
-
-import PomodoroTimer from "./components/PomodoroTimer"
+import PomodoroTimer from "./components/PomodoroTimer";
+import Timer from "./components/Timer";
 
 const App = () => {
-  return <div style={{ display: 'flex', flexDirection: 'column' }}>
-    <PomodoroTimer />
-  </div>
-}
+  return (
+    <div className="w-full h-screen flex justify-center align-middle">
+      <Timer />
+    </div>
+  );
+};
 
-export default App
+export default App;
