@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { ReactNode, useEffect, useRef, useState } from "react";
 
 type TimerStateType = "init" | "running" | "paused" | "completed";
 
@@ -73,6 +73,7 @@ const Timer = () => {
   };
 
   const pauseTimer = () => {
+    console.log("pauseTimer")
     clearInterval(intervalIdRef.current);
     const curElapsedTime = Date.now() - latestResumeTimeRef.current;
     elapsedTimeRef.current += curElapsedTime;
@@ -107,51 +108,55 @@ const Timer = () => {
       .padStart(2, "0")} : ${seconds.toString().padStart(2, "0")}`;
   };
 
+  const StartButton =
+    <button className="block border rounded-full shadow-sm font-bold py-2 px-4 focus:outline-none focus:ring focus:ring-opacity-50 bg-indigo-500 hover:bg-indigo-700 text-white border-transparent focus:border-indigo-300 focus:ring-indigo-200 m-2" onClick={startTimer}>
+      Start
+    </button>;
+
+  const ResumeButton =
+    <button className="block border rounded-full shadow-sm font-bold py-2 px-4 focus:outline-none focus:ring focus:ring-opacity-50 bg-indigo-500 hover:bg-indigo-700 text-white border-transparent focus:border-indigo-300 focus:ring-indigo-200 m-2" onClick={resumeTimer}>
+      Resume
+    </button>;
+
+
+  const PauseButton =
+    <button className="block border rounded-full shadow-sm font-bold py-2 px-4 focus:outline-none focus:ring focus:ring-opacity-50 bg-indigo-500 hover:bg-indigo-700 text-white border-transparent focus:border-indigo-300 focus:ring-indigo-200 m-2" onClick={pauseTimer}>
+      Pause
+    </button>;
+
+  const ResetButton =
+    <button className="block border rounded-full shadow-sm font-bold py-2 px-4 focus:outline-none focus:ring focus:ring-opacity-50 bg-indigo-500 hover:bg-indigo-700 text-white border-transparent focus:border-indigo-300 focus:ring-indigo-200 m-2" onClick={resetTimer}>
+      Reset
+    </button>;
+
   return (
-    <div className="flex">
-      <div
-        style={{ display: "flex", flexDirection: "column", minWidth: "250px" }}
-      >
-        {timerState === "init" && (
-          <div style={{ display: "flex", gap: 5 }}>
-            <input
-              ref={inputRef}
-              style={{ maxWidth: 100 }}
-              id="hours"
-              type="number"
-            />
-            <button onClick={addPhase}>Add Phase</button>
-          </div>
-        )}
-        <div style={{ display: "flex", gap: 5 }}>
-          {phaseList.map((p, i) => (i === phase ? <em key={i}> {p} </em> : p))}{" "}
-          end
-        </div>
-        <div>{transform(resultTime)}</div> <span> ::: {phase}</span>
-        <div style={{ display: "flex", gap: 5 }}>
-          {timerState === "init" && <button onClick={startTimer}>Start</button>}
-          {timerState === "paused" && (
-            <button onClick={resumeTimer}>Resume</button>
-          )}
-          {timerState === "running" && (
-            <button onClick={pauseTimer}>Pause</button>
-          )}
-          {timerState !== "init" && <button onClick={resetTimer}>Reset</button>}
-        </div>
+    <div className="w-96 flex flex-col items-center p-2 bg-slate-700 rounded-2xl">
+      <div className="w-[100%] h-[150px] flex justify-center items-center bg-slate-500 rounded-2xl m-2 my-1">
+        <h1 className="text-6xl text-white font-bold">{transform(resultTime)}</h1>
       </div>
-      <div>
-        <pre>
-          {`Details: Pomodoro\nstatus:           ${timerState}\nlatestResumeTime: ${transform(
-            latestResumeTimeRef.current
-          )}\ntotalElapsedTime: ${transform(
-            elapsedTimeRef.current
-          )}\nelapsedTime:      ${transform(
-            elapsedTimeRef.current
-          )}\ndisplayTime:      ${transform(resultTime)}
-            `}
-        </pre>
+      <div className="w-[100%] h-20 flex justify-center items-center bg-slate-500 rounded-2xl m-2 my-1">
+        {timerState === "init" && StartButton}
+        {timerState === "paused" && ResumeButton}
+        {timerState === "running" && PauseButton}
+        {timerState !== "init" && ResetButton}
+        {timerState}
+        {/* <StartButton />
+        <ResumeButton />
+        <PauseButton />
+        <ResetButton /> */}
       </div>
+      <div className="w-[100%] h-20 flex justify-center items-center bg-slate-500 rounded-2xl m-2 my-1">
+        <input ref={inputRef} className="px-4 py-1 text-gray-800 rounded-full focus:outline-none"
+          placeholder="mins" />
+        <button className="block border rounded-full shadow-sm font-bold py-2 px-4 focus:outline-none focus:ring focus:ring-opacity-50 bg-indigo-500 hover:bg-indigo-700 text-white border-transparent focus:border-indigo-300 focus:ring-indigo-200 m-2" onClick={addPhase}>
+          Add Phase
+        </button>
+
+      </div>
+
     </div>
+
+
   );
 };
 

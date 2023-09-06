@@ -1,0 +1,27 @@
+.progress {
+  width: 100px;
+  height: 100px;
+}
+
+.progress-background {
+  fill: none;
+  stroke: #ddd;
+  stroke-width: 5;
+}
+
+.progress-bar {
+  fill: none;
+  stroke: #007aff;
+  stroke-width: 5;
+  stroke-dasharray: 0 283;
+  stroke-linecap: round;
+  transform-origin: center;
+  transform: rotate(-90deg);
+  animation: progress 2s ease-out forwards;
+}
+
+@keyframes progress {
+  to {
+    stroke-dasharray: 283 283;
+  }
+}
