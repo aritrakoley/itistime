@@ -8,5 +8,7 @@ ARG USERNAME=node
 RUN echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 
+RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
+    && echo "$SNIPPET" >> "/root/.bashrc"
 # Set `DEVCONTAINER` environment variable to help with orientation
 ENV DEVCONTAINER=true
