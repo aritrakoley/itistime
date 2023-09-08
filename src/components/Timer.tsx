@@ -160,7 +160,7 @@ const Timer = () => {
         <div>
           <h4 className="text-white font-bold">Phase Config</h4>
         </div>
-        <div className="w-[90%] min-h-20 rounded-2xl flex flex-wrap justify-start items-center bg-slate-900 p-2 m-2">
+        {phaseList.length ? <div className="w-[90%] min-h-20 rounded-2xl flex flex-wrap justify-start items-center bg-slate-900 p-2 m-2">
           {phaseList.map((p, i) => (
             <div key={i} className="flex items-center">
               <div className={`w-10 h-10 flex justify-center items-center p-2 m-2 ${i === phase ? "bg-lime-600" : "bg-gray-400"} rounded-full`}>
@@ -170,18 +170,22 @@ const Timer = () => {
 
             </div>
           ))}
-          {phaseList.length ? <div className={`w-10 h-10 flex justify-center items-center p-2 m-2 ${settings.loop ? "bg-lime-600" : "bg-red-400"} rounded-full`}>
+          <div onClick={() => setSettings(prev => ({ ...prev, loop: !prev.loop }))} className={`w-10 h-10 flex justify-center items-center p-2 m-2 ${settings.loop ? "bg-lime-600" : "bg-red-400"} rounded-full`}>
             {settings.loop ? <i className="text-white font-bold"><ArrowUturnRightIcon className="w-7 h-7 text-white rotate-180" /></i> : null}
-          </div> : null}
-        </div>
-        <div>
-          <input ref={inputRef} className="px-4 py-1 text-gray-800 rounded-full focus:outline-none"
-            placeholder="mins" />
+          </div>
+        </div> : null}
+        <div className="flex justify-center items-center">
+          <input ref={inputRef} className=" w-16 h-10 text-center text-gray-800 rounded-l-xl focus:outline-none"
+            placeholder="seconds" />
+          <button className="w-12 h-10 block border rounded-r-xl shadow-sm font-bold text-2xl  px-2 focus:outline-none focus:ring focus:ring-opacity-50 bg-indigo-500 hover:bg-indigo-700 text-white border-transparent focus:border-indigo-300 focus:ring-indigo-200 mr-2 mt-2 mb-2" onClick={addPhase}>
+            <p>+</p>
+          </button>
+
+          <label htmlFor="auto-start">Start Next Phase Automatically: </label>
+          <input name="auto-start" type="checkbox" checked={settings.autostart_next_phase} onChange={() => setSettings(prev => ({ ...prev, autostart_next_phase: !prev.autostart_next_phase }))} />
         </div>
 
-        <button className="block border rounded-full shadow-sm font-bold py-2 px-4 focus:outline-none focus:ring focus:ring-opacity-50 bg-indigo-500 hover:bg-indigo-700 text-white border-transparent focus:border-indigo-300 focus:ring-indigo-200 m-2" onClick={addPhase}>
-          Add Phase
-        </button>
+
 
       </div>
 
