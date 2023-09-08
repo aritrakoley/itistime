@@ -1,10 +1,12 @@
-import React, { ReactNode, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { BeakerIcon, ArrowUturnRightIcon } from '@heroicons/react/24/solid';
 
 type TimerStateType = "init" | "running" | "paused" | "completed";
 
 const DEFAULT_UPDATE_INTERVAL = 50;
 const DEFAULT_SETTINGS = {
-  autostart_next_phase: false,
+  autostart_next_phase: true,
+  loop: true
 };
 
 const Timer = () => {
@@ -12,6 +14,8 @@ const Timer = () => {
   const totalTimeRef = useRef<number>(0);
   const elapsedTimeRef = useRef<number>(0);
   const latestResumeTimeRef = useRef<number>(0);
+  const firstStart = useRef<boolean>(true);
+
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -26,9 +30,11 @@ const Timer = () => {
     console.log("useEffect");
     if (phase < phaseList.length) {
       setupTimer();
-      if (settings.autostart_next_phase && phase > 0) {
+      if (settings.autostart_next_phase && !firstStart.current) {
         startTimer();
       }
+    } else if (settings.loop) {
+      setPhase(0);
     }
   }, [phase, phaseList]);
 
@@ -41,9 +47,11 @@ const Timer = () => {
 
   const addPhase = () => {
     const val = inputRef.current?.value
-      ? parseInt(inputRef.current?.value)
+      ? parseInt(inputRef.current.value) * 1000
       : null;
     if (val) setPhaseList([...phaseList, val]);
+    if (inputRef.current?.value) inputRef.current.value = '';
+
   };
 
   const handleComplete = () => {
@@ -66,6 +74,8 @@ const Timer = () => {
   };
 
   const startTimer = () => {
+    if (firstStart.current) firstStart.current = false;
+
     clearInterval(intervalIdRef.current);
     latestResumeTimeRef.current = Date.now();
     intervalIdRef.current = setInterval(updateTimer, DEFAULT_UPDATE_INTERVAL);
@@ -88,12 +98,14 @@ const Timer = () => {
 
   const resetTimer = () => {
     clearInterval(intervalIdRef.current);
+    firstStart.current = true;
     intervalIdRef.current = 0;
     totalTimeRef.current = 0;
     elapsedTimeRef.current = 0;
     latestResumeTimeRef.current = 0;
 
     setTimerState("init");
+    setPhase(0);
     setResultTime(0);
   };
 
@@ -131,23 +143,42 @@ const Timer = () => {
 
   return (
     <div className="w-96 flex flex-col items-center p-2 bg-slate-700 rounded-2xl">
+
       <div className="w-[100%] h-[150px] flex justify-center items-center bg-slate-500 rounded-2xl m-2 my-1">
         <h1 className="text-6xl text-white font-bold">{transform(resultTime)}</h1>
       </div>
+
       <div className="w-[100%] h-20 flex justify-center items-center bg-slate-500 rounded-2xl m-2 my-1">
         {timerState === "init" && StartButton}
         {timerState === "paused" && ResumeButton}
         {timerState === "running" && PauseButton}
         {timerState !== "init" && ResetButton}
         {timerState}
-        {/* <StartButton />
-        <ResumeButton />
-        <PauseButton />
-        <ResetButton /> */}
       </div>
-      <div className="w-[100%] h-20 flex justify-center items-center bg-slate-500 rounded-2xl m-2 my-1">
-        <input ref={inputRef} className="px-4 py-1 text-gray-800 rounded-full focus:outline-none"
-          placeholder="mins" />
+
+      <div className="w-[100%] flex flex-col justify-center items-center bg-slate-500 rounded-2xl m-2 my-1">
+        <div>
+          <h4 className="text-white font-bold">Phase Config</h4>
+        </div>
+        <div className="w-[90%] min-h-20 rounded-2xl flex flex-wrap justify-start items-center bg-slate-900 p-2 m-2">
+          {phaseList.map((p, i) => (
+            <div key={i} className="flex items-center">
+              <div className={`w-10 h-10 flex justify-center items-center p-2 m-2 ${i === phase ? "bg-lime-600" : "bg-gray-400"} rounded-full`}>
+                <p className="text-white font-bold">{Math.round(p / 1000)}</p>
+              </div>
+              <p className="text-white font-bold"> &gt;&gt; </p>
+
+            </div>
+          ))}
+          {phaseList.length ? <div className={`w-10 h-10 flex justify-center items-center p-2 m-2 ${settings.loop ? "bg-lime-600" : "bg-red-400"} rounded-full`}>
+            {settings.loop ? <i className="text-white font-bold"><ArrowUturnRightIcon className="w-7 h-7 text-white rotate-180" /></i> : null}
+          </div> : null}
+        </div>
+        <div>
+          <input ref={inputRef} className="px-4 py-1 text-gray-800 rounded-full focus:outline-none"
+            placeholder="mins" />
+        </div>
+
         <button className="block border rounded-full shadow-sm font-bold py-2 px-4 focus:outline-none focus:ring focus:ring-opacity-50 bg-indigo-500 hover:bg-indigo-700 text-white border-transparent focus:border-indigo-300 focus:ring-indigo-200 m-2" onClick={addPhase}>
           Add Phase
         </button>
