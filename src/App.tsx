@@ -3,7 +3,7 @@ import Timer from "./components/Timer";
 
 const App = () => {
   return (
-    <div className="w-full h-screen flex justify-center items-center bg-gray-100">
+    <div className="w-full h-screen flex justify-center items-center  bg-slate-900">
       <Timer />
     </div>
   );

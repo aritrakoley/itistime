@@ -126,10 +126,10 @@ const Timer = () => {
     </button>;
 
   return (
-    <div className="w-[35rem] flex flex-col items-center p-2 bg-slate-900 rounded-2xl">
+    <div className="lg:w-[85%] md:w-[95%] sm:w-[98%] w-[35rem] flex flex-col items-center p-2">
       <TimeDisplay time={resultTime} />
 
-      <div className="w-[100%] h-40 flex justify-center items-center bg-slate-800 rounded-2xl m-2 my-1">
+      <div className="w-[100%] h-40 flex justify-center items-center rounded-2xl m-2 my-1">
         {timerState === "init" && StartButton}
         {timerState === "paused" && ResumeButton}
         {timerState === "running" && PauseButton}
