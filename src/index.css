@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.action-btn {
+  @apply w-24 h-24 flex justify-center items-center border rounded-full p-2 m-2 focus:outline-none focus:ring-1 focus:ring-opacity-50  hover:scale-105 ease-in-out  duration-150  font-bold text-neutral-100  border-transparent;
+}
