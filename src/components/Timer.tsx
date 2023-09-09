@@ -104,26 +104,25 @@ const Timer = () => {
   };
 
 
-
   const StartButton =
-    <button className="action-btn bg-green-700 active:bg-green-800" onClick={startTimer}>
-      <PlayIcon className="ml-1 mr-[-0.25rem] w-20 h-20" />
+    <button className="group action-btn bg-green-600 active:bg-green-700 focus:ring-green-200" onClick={startTimer}>
+      <PlayIcon className="action-button-icon ml-1 mr-[-0.25rem] w-20 h-20" />
     </button >;
 
   const ResumeButton =
-    <button className="action-btn bg-green-700 active:bg-green-800" onClick={resumeTimer}>
-      <PlayIcon className="ml-1 mr-[-0.25rem] w-20 h-20" />
+    <button className="group action-btn bg-green-600 active:bg-green-700 focus:ring-green-200" onClick={resumeTimer}>
+      <PlayIcon className="action-button-icon ml-1 mr-[-0.25rem] w-20 h-20" />
     </button>;
 
 
   const PauseButton =
-    <button className="action-btn bg-yellow-700 active:bg-yellow-800" onClick={pauseTimer}>
-      <PauseIcon className="w-20 h-20" />
+    <button className="group action-btn bg-yellow-600 active:bg-yellow-700 focus:ring-yellow-200" onClick={pauseTimer}>
+      <PauseIcon className="action-button-icon w-20 h-20" />
     </button>;
 
   const ResetButton =
-    <button className="action-btn bg-sky-700 active:bg-sky-800" onClick={resetTimer}>
-      <ArrowPathIcon className="w-20 h-20" />
+    <button className="group action-btn bg-cyan-600 active:bg-cyan-700 focus:ring-cyan-200" onClick={resetTimer}>
+      <ArrowPathIcon className="action-button-icon w-20 h-20" />
     </button>;
 
   return (
