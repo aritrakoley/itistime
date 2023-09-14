@@ -13,7 +13,7 @@ const Timer = () => {
   const firstStart = useRef<boolean>(true);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [phaseList, setPhaseList] = useState<number[]>([]);
+  const [phaseList, setPhaseList] = useState<number[]>(DEFAULT_SETTINGS.phase_list);
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [phase, setPhase] = useState<number>(0);
   const [resultTime, setResultTime] = useState<number>(0);
@@ -136,6 +136,17 @@ const Timer = () => {
   return (
     <div className="lg:w-[85%] md:w-[95%] sm:w-[98%] w-[35rem]flex flex-col items-center p-2">
       <TimeDisplay time={resultTime} />
+      <div className="w-[100%] min-h-24 rounded-2xl flex flex-wrap justify-center items-center md:px-4 sm:px-10 px-10 m-1">
+          {phaseList.map((p, i) => (
+            <div key={i} className="flex items-center" onClick={() => setPhaseList(prev => prev.filter((p, idx) => idx !== i))}>
+              <div className={`${i === phase ? "phase-active" : "phase-inactive"}`}>
+                <p className="text-white ">{Math.round(p / 1000)}</p>
+              </div>
+              <p className="text-slate-200 font-bold"><ForwardIcon className="w-4 h-4" /> </p>
+            </div>
+          ))}
+          {phaseList.length ? <div className="flex items-center">{loopToggle}</div> : null}
+        </div>
 
       <div className="w-[100%] h-40 flex justify-center items-center rounded-2xl m-2 my-1">
         {timerState === "init" && startButton}
@@ -169,17 +180,7 @@ const Timer = () => {
           </button>
         </div>
 
-        <div className="max-w-[90%] h-24 rounded-2xl flex flex-wrap justify-center items-center p-2 m-2">
-          {phaseList.map((p, i) => (
-            <div key={i} className="flex items-center" onClick={() => setPhaseList(prev => prev.filter((p, idx) => idx !== i))}>
-              <div className={`${i === phase ? "phase-active" : "phase-inactive"}`}>
-                <p className="text-white font-bold">{Math.round(p / 1000)}</p>
-              </div>
-              <p className="text-slate-200 font-bold"><ForwardIcon className="w-6 h-6" /> </p>
-            </div>
-          ))}
-          {phaseList.length ? <div className="flex items-center">{loopToggle}</div> : null}
-        </div>
+        
 
       </div>
     </div>
