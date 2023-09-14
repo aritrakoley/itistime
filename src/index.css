@@ -27,7 +27,7 @@
   }
 
   .phase-active {
-    @apply w-12 h-12 flex justify-center items-center bg-yellow-500 rounded-full p-2 m-2 drop-shadow-[0_0_20px_rgba(255,255,255,0.5)] ease-in-out duration-100 border-transparent cursor-pointer;
+    @apply w-12 h-12 flex justify-center items-center bg-yellow-500 rounded-full p-2 drop-shadow-[0_0_20px_rgba(255,255,255,0.5)] ease-in-out duration-100 border-transparent cursor-pointer;
   }
 
   .phase-active p {
@@ -35,7 +35,7 @@
   }
 
   .phase-inactive {
-    @apply w-8 h-8 flex justify-center items-center bg-slate-500 active:bg-slate-600  rounded-full p-2 m-2 focus:outline-none  drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.5)] ease-in-out duration-100 border-transparent cursor-pointer;
+    @apply w-8 h-8 flex justify-center items-center bg-slate-500 active:bg-slate-600 rounded-full p-2 focus:outline-none  drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.5)] ease-in-out duration-100 border-transparent cursor-pointer;
   }
 
   .phase-inactive p {
