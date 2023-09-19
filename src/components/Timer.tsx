@@ -10,7 +10,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { DEFAULT_SETTINGS, DEFAULT_UPDATE_INTERVAL } from "../config/constants";
 import TimeDisplay from "./TimeDisplay";
-import { m2ms } from "../utils/utils";
+import { ms2hms, s2hms, s2ms, timeTransform } from "../utils/utils";
 
 type TimerStateType = "init" | "running" | "paused" | "completed";
 
@@ -44,7 +44,7 @@ const Timer = () => {
 
   const setupTimer = () => {
     console.log("Setup Timer", phaseList[phase]);
-    totalTimeRef.current = m2ms(phaseList[phase]);
+    totalTimeRef.current = s2ms(phaseList[phase]);
     setResultTime(totalTimeRef.current);
     setTimerState("init");
   };
@@ -151,9 +151,8 @@ const Timer = () => {
 
   const autoNextToggle = (
     <button
-      className={`group ${
-        settings.autostart_next_phase ? "toggle-btn-on" : "toggle-btn-off"
-      }`}
+      className={`group ${settings.autostart_next_phase ? "toggle-btn-on" : "toggle-btn-off"
+        }`}
       onClick={() =>
         setSettings((prev) => ({
           ...prev,
@@ -186,20 +185,10 @@ const Timer = () => {
               setPhaseList((prev) => prev.filter((p, idx) => idx !== i))
             }
           >
-            <div className="group w-12 h-12 flex flex-col justify-center items-center m-2 ">
-              <div className="absolute z-50 ">
-                <XCircleIcon className="w-10 h-10 text-red-400 opacity-0 group-hover:opacity-95 group-hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.5)] duration-200 ease-in-out " />
-              </div>
-              <div
-                className={`${i === phase ? "phase-active" : "phase-inactive"}`}
-              >
-                <p className="text-white ">{p}</p>
-              </div>
+            <div className={`${i === phase ? "phase-active" : "phase-inactive"}`} >
+              <p className="text-white ">{timeTransform(p, s2hms)}</p>
             </div>
-
-            <p className="text-slate-200 font-bold">
-              <ForwardIcon className="w-4 h-4" />
-            </p>
+            <PlayIcon className="w-4 h-4 text-white" />
           </div>
         ))}
         {phaseList.length ? (
@@ -230,7 +219,7 @@ const Timer = () => {
                   onClick={() => setPhaseList((prev) => [...prev, qp])}
                 >
                   <div className="w-10 h-10 flex justify-center items-center p-2 mx-3 my-2 bg-yellow-500 rounded-full">
-                    <p className="text-white font-bold">{qp}</p>
+                    <p className="text-white font-bold">{timeTransform(qp, s2hms)}</p>
                   </div>
                 </div>
               ))}
@@ -260,7 +249,7 @@ const Timer = () => {
                   onClick={() => setPhaseList((prev) => [...prev, qp])}
                 >
                   <div className="w-10 h-10 flex justify-center items-center p-2 mx-3 my-2 bg-yellow-500 rounded-full">
-                    <p className="text-white font-bold">{qp}</p>
+                    <p className="text-white font-bold">{timeTransform(qp, s2hms)}</p>
                   </div>
                 </div>
               ))}
