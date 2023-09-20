@@ -20,7 +20,9 @@ const Timer = () => {
   const elapsedTimeRef = useRef<number>(0);
   const latestResumeTimeRef = useRef<number>(0);
   const firstStart = useRef<boolean>(true);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const hourInputRef = useRef<HTMLInputElement>(null);
+  const minInputRef = useRef<HTMLInputElement>(null);
+  const secInputRef = useRef<HTMLInputElement>(null);
 
   const [phaseList, setPhaseList] = useState<number[]>(
     DEFAULT_SETTINGS.phase_list
@@ -31,7 +33,8 @@ const Timer = () => {
   const [timerState, setTimerState] = useState<TimerStateType>("init");
 
   useEffect(() => {
-    console.log("useEffect");
+    if (phaseList.length === 0) setResultTime(0);
+
     if (phase < phaseList.length) {
       setupTimer();
       if (settings.autostart_next_phase && !firstStart.current) {
@@ -50,11 +53,22 @@ const Timer = () => {
   };
 
   const handlePhaseInput = () => {
-    const val = inputRef.current?.value
-      ? parseInt(inputRef.current.value)
-      : null;
-    if (val) setPhaseList([...phaseList, val]);
-    if (inputRef.current?.value) inputRef.current.value = "";
+    const h = hourInputRef.current?.value
+      ? parseInt(hourInputRef.current.value)
+      : 0;
+    const m = minInputRef.current?.value
+      ? parseInt(minInputRef.current.value)
+      : 0;
+    const s = secInputRef.current?.value
+      ? parseInt(secInputRef.current.value)
+      : 0;
+
+    const newPhase = h * 3600 + m * 60 + s;
+    if (newPhase) setPhaseList([...phaseList, newPhase]);
+
+    if (hourInputRef.current) hourInputRef.current.value = "";
+    if (minInputRef.current) minInputRef.current.value = "";
+    if (secInputRef.current) secInputRef.current.value = "";
   };
 
   const handleComplete = () => {
@@ -176,11 +190,11 @@ const Timer = () => {
   return (
     <div className="lg:w-[85%] md:w-[95%] sm:w-[98%] w-[35rem]flex flex-col items-center p-2">
       <TimeDisplay time={resultTime} />
-      <div className="w-[100%] min-h-24 rounded-2xl flex flex-wrap justify-center items-center md:px-4 sm:px-10 px-10 m-1">
+      <div className="w-[100%] h-16 rounded-2xl flex flex-wrap justify-center items-center md:px-4 sm:px-10 px-10 m-1">
         {phaseList.map((p, i) => (
           <div
             key={i}
-            className="flex items-center"
+            className="flex justify-center items-center"
             onClick={() =>
               setPhaseList((prev) => prev.filter((p, idx) => idx !== i))
             }
@@ -188,10 +202,10 @@ const Timer = () => {
             <div className={`${i === phase ? "phase-active" : "phase-inactive"}`} >
               <p className="text-white ">{timeTransform(p, s2hms)}</p>
             </div>
-            <PlayIcon className="w-4 h-4 text-white" />
+            {i < phaseList.length - 1 || settings.loop ? <PlayIcon className="w-4 h-4 mx-1 text-white" /> : null}
           </div>
         ))}
-        {phaseList.length ? (
+        {phaseList.length && settings.loop ? (
           <div className="flex items-center">{loopToggle}</div>
         ) : null}
       </div>
@@ -209,7 +223,7 @@ const Timer = () => {
 
       <div className="w-[100%] flex flex-col justify-center items-center">
         <div className="flex justify-center items-start my-4">
-          <div className="flex">
+          {/* <div className="flex">
             {settings.quick_phases
               .slice(0, Math.round(settings.quick_phases.length / 2))
               .map((qp, i) => (
@@ -223,23 +237,35 @@ const Timer = () => {
                   </div>
                 </div>
               ))}
-          </div>
+          </div> */}
 
-          <div className="flex flex-col items-center mx-3 ">
-            <input
-              ref={inputRef}
-              className="z-10 w-16 h-16 text-center text-gray-800 rounded-full focus:outline-none"
-              placeholder="mins"
-            />
+          <div className="flex flex-col items-center mx-3">
+            <div className="flex justify-center items-center">
+              <input
+                ref={hourInputRef}
+                className="z-10 w-16 h-16 text-center text-gray-800 rounded-full focus:outline-none"
+                placeholder="H"
+              />
+              <input
+                ref={minInputRef}
+                className="z-10 w-16 h-16 text-center text-gray-800 rounded-full focus:outline-none"
+                placeholder="M"
+              />
+              <input
+                ref={secInputRef}
+                className="z-10 w-16 h-16 text-center text-gray-800 rounded-full focus:outline-none"
+                placeholder="S"
+              />
+            </div>
             <button
-              className="z-9 w-14 h-14 flex flex-col items-center justify-end rounded-b-full shadow-sm font-bold text-2xl focus:outline-none focus:ring focus:ring-opacity-50 bg-violet-500 hover:bg-violet-700 text-white border-transparent focus:border-violet-300 mt-[-1.8rem] focus:ring-indigo-200 mb-2 pb-1"
+              className="z-9 w-48 h-14 flex flex-col items-center justify-end rounded-b-2xl shadow-sm font-bold text-2xl focus:outline-none focus:ring focus:ring-opacity-50 bg-violet-500 hover:bg-violet-700 text-white border-transparent focus:border-violet-300 mt-[-1.8rem] focus:ring-indigo-200 mb-2 pb-1"
               onClick={handlePhaseInput}
             >
               <PlusIcon className="w-6 h-6" />
             </button>
           </div>
 
-          <div className="flex">
+          {/* <div className="flex">
             {settings.quick_phases
               .slice(Math.round(settings.quick_phases.length / 2))
               .map((qp, i) => (
@@ -253,7 +279,7 @@ const Timer = () => {
                   </div>
                 </div>
               ))}
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
