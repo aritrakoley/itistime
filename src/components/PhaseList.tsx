@@ -23,7 +23,7 @@ const PhaseList = (props: PhaseListProps) => {
                     <div className={`${i === phase ? "phase-active" : "phase-inactive"}`} >
                         <p className="text-white ">{timeTransform(p, s2hms)}</p>
                     </div>
-                    {i < phaseList.length - 1 ? <PlayIcon className="w-4 h-4 mx-1 text-white" /> : null}
+                    {i < phaseList.length - 1 ? <PlayIcon className={`w-4 h-4 mx-1 ${settings.autostart_next_phase ? 'text-green-500' : 'text-white'}`} /> : null}
                     {i === phaseList.length - 1 && !settings.loop ? <StopIcon className="w-4 h-4 mx-1 text-red-500" /> : null}
                     {i === phaseList.length - 1 && settings.loop ? <div className="w-4 h-4 flex justify-center items-center ml-2 rounded-full bg-green-600"><ArrowUturnRightIcon className="w-3 h-3 rotate-180 text-white" /></div> : null}
                 </div>

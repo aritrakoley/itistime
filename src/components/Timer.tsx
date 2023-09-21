@@ -9,6 +9,12 @@ import {
   XCircleIcon,
   StopCircleIcon,
   StopIcon,
+  Cog6ToothIcon,
+  PencilIcon,
+  PencilSquareIcon,
+  TrashIcon,
+  CheckIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/solid";
 import { DEFAULT_SETTINGS, DEFAULT_UPDATE_INTERVAL } from "../config/constants";
 import TimeDisplay from "./TimeDisplay";
@@ -34,6 +40,7 @@ const Timer = () => {
   const [phase, setPhase] = useState<number>(0);
   const [resultTime, setResultTime] = useState<number>(0);
   const [timerState, setTimerState] = useState<TimerStateType>("init");
+  const [isEditMode, setIsEditMode] = useState<number>(-1);
 
   useEffect(() => {
     console.log("---")
@@ -56,7 +63,7 @@ const Timer = () => {
     setTimerState("init");
   };
 
-  const handlePhaseInput = () => {
+  const handlePhaseInput = (index?: number) => {
     const h = hourInputRef.current?.value
       ? parseInt(hourInputRef.current.value)
       : 0;
@@ -67,13 +74,19 @@ const Timer = () => {
       ? parseInt(secInputRef.current.value)
       : 0;
 
-    const newPhase = h * 3600 + m * 60 + s;
-    if (newPhase) setPhaseList([...phaseList, newPhase]);
-
     if (hourInputRef.current) hourInputRef.current.value = "";
     if (minInputRef.current) minInputRef.current.value = "";
     if (secInputRef.current) secInputRef.current.value = "";
+
+    const newPhase = h * 3600 + m * 60 + s;
+    if (!newPhase) return
+    if (index == null) setPhaseList([...phaseList, newPhase]);
+    if (index && index >= 0 && index < phaseList.length) setPhaseList(phaseList.map((p, i) => i === index ? newPhase : p));
   };
+
+  const removePhaseAtIndex = (idx: number) => {
+    setPhaseList(prev => prev.filter((p, i) => i !== idx))
+  }
 
   const handleComplete = () => {
     clearInterval(intervalIdRef.current);
@@ -130,6 +143,8 @@ const Timer = () => {
     setPhase(0);
     setResultTime(0);
   };
+
+  const openSettingsModal = () => setSettings(prev => ({ ...prev, isModalOpen: true }));
 
   const startButton = (
     <button
@@ -192,84 +207,98 @@ const Timer = () => {
   );
 
   return (
-    <div className="lg:w-[85%] md:w-[95%] sm:w-[98%] w-[35rem]flex flex-col items-center p-2">
+    <div className="lg:w-[85%] md:w-[95%] z-10 sm:w-[98%] w-[35rem]flex flex-col items-center p-2">
       <TimeDisplay time={resultTime} />
       <PhaseList phaseList={phaseList} phase={phase} setPhaseList={setPhaseList} settings={settings} />
 
       <div className="w-[100%] flex justify-center items-center rounded-2xl mt-5">
-        <div className="flex">{autoNextToggle}</div>
+
         <div className="w-64 flex justify-center items-center rounded-2xl m-2 my-1">
           {timerState === "init" && startButton}
           {timerState === "paused" && resumeButton}
           {timerState === "running" && pauseButton}
           {timerState !== "init" && resetButton}
         </div>
-        <div className="flex">{loopToggle}</div>
+
       </div>
 
       <div className="w-[100%] flex flex-col justify-center items-center">
+
         <div className="flex justify-center items-start my-4">
-          {/* <div className="flex">
-            {settings.quick_phases
-              .slice(0, Math.round(settings.quick_phases.length / 2))
-              .map((qp, i) => (
-                <div
-                  key={i}
-                  className="flex items-center"
-                  onClick={() => setPhaseList((prev) => [...prev, qp])}
-                >
-                  <div className="w-10 h-10 flex justify-center items-center p-2 mx-3 my-2 bg-yellow-500 rounded-full">
-                    <p className="text-white font-bold">{timeTransform(qp, s2hms)}</p>
-                  </div>
-                </div>
-              ))}
-          </div> */}
-
-          <div className="flex flex-col items-center mx-3">
-            <div className="flex justify-center items-center">
-              <input
-                ref={hourInputRef}
-                className="z-10 w-16 h-16 text-center text-gray-800 rounded-full focus:outline-none"
-                placeholder="H"
-              />
-              <input
-                ref={minInputRef}
-                className="z-10 w-16 h-16 text-center text-gray-800 rounded-full focus:outline-none"
-                placeholder="M"
-              />
-              <input
-                ref={secInputRef}
-                className="z-10 w-16 h-16 text-center text-gray-800 rounded-full focus:outline-none"
-                placeholder="S"
-              />
-            </div>
-            <button
-              className="z-9 w-48 h-16 flex flex-col items-center justify-end rounded-b-full shadow-sm focus:outline-none focus:ring focus:ring-opacity-50 bg-violet-500 hover:bg-violet-700 text-white border-transparent focus:border-violet-300 mt-[-1.8rem] focus:ring-indigo-200 mb-2 pb-1"
-              onClick={handlePhaseInput}
-            >
-              <span className="mb-1">Add Phase</span>
-            </button>
-          </div>
-
-          {/* <div className="flex">
-            {settings.quick_phases
-              .slice(Math.round(settings.quick_phases.length / 2))
-              .map((qp, i) => (
-                <div
-                  key={i}
-                  className="flex items-center"
-                  onClick={() => setPhaseList((prev) => [...prev, qp])}
-                >
-                  <div className="w-10 h-10 flex justify-center items-center p-2 mx-3 my-2 bg-yellow-500 rounded-full">
-                    <p className="text-white font-bold">{timeTransform(qp, s2hms)}</p>
-                  </div>
-                </div>
-              ))}
-          </div> */}
+          <div className="flex">{autoNextToggle}</div>
+          <div className="flex">{loopToggle}</div>
+          <div className="flex" onClick={openSettingsModal}><Cog6ToothIcon className="panel-btn" /></div>
         </div>
+
       </div>
-    </div>
+
+      {
+        settings.isModalOpen ? (
+          <>
+            <div className="w-screen h-screen fixed inset-0 flex justify-center items-center  bg-slate-900 opacity-70"></div>
+
+            <div className="w-fit h-fit fixed inset-0 m-auto flex justify-center items-center rounded-2xl bg-red-900">
+              <div className="w-[20rem] h-[30rem] flex flex-col items-center bg-slate-700 rounded-2xl p-2">
+                <div className="w-full flex justify-center items-center mb-2">
+                  <div className="grow"></div>
+                  <div className="text-white text-3xl">Phases</div>
+                  <div className="flex grow justify-end">
+                    <button className="w-9 h-9 flex justify-center items-center text-white text-xl ml-1 mr-1 rounded-full bg-red-400" onClick={() => setSettings({ ...settings, isModalOpen: false })}><XMarkIcon className="w-5 h-5" /></button>
+                  </div>
+                </div>
+                {phaseList.map((p, i) => (
+                  <div key={i} className="w-full h-12 flex items-center bg-slate-500 rounded-l-full rounded-r-full mt-1 p-1">
+                    <span className="w-9 h-9 flex justify-center items-center text-white text-xl ml-1 rounded-full bg-slate-400 ">{i + 1}</span>
+                    {isEditMode !== i
+                      ? <p className="text-white text-2xl ml-2">{timeTransform(p, s2hms)}</p>
+                      : <div className="flex mx-1 text-white text-2xl">
+                        <input
+                          ref={hourInputRef}
+                          className="z-10 w-9 h-9 text-center text-gray-800 rounded-xl focus:outline-none mx-1"
+                          placeholder="h"
+                        />
+                        :
+                        <input
+                          ref={minInputRef}
+                          className="z-10 w-9 h-9 text-center text-gray-800 rounded-xl focus:outline-none mx-1"
+                          placeholder="m"
+                        />
+                        :
+                        <input
+                          ref={secInputRef}
+                          className="z-10 w-9 h-9 text-center text-gray-800 rounded-xl focus:outline-none mx-1"
+                          placeholder="s"
+                        />
+                      </div>}
+                    {isEditMode === i
+                      ? <div className="flex grow justify-end">
+                        <button className="w-9 h-9 flex justify-center items-center text-white text-xl ml-1 rounded-full bg-green-400" onClick={() => { handlePhaseInput(i); setIsEditMode(-1) }}><CheckIcon className="w-5 h-5" /></button>
+                        <button className="w-9 h-9 flex justify-center items-center text-white text-xl mx-1 rounded-full bg-red-400" onClick={() => { setIsEditMode(-1) }}><XMarkIcon className="w-5 h-5" /></button>
+                      </div>
+                      : <div className="flex grow justify-end">
+                        <button className="w-9 h-9 flex justify-center items-center text-white text-xl ml-1 rounded-full bg-amber-400" onClick={() => {
+                          setIsEditMode(i);
+                          const [h, m, s] = s2hms(p);
+                          if (hourInputRef.current) hourInputRef.current.value = h.toString();
+                          if (minInputRef.current) minInputRef.current.value = m.toString();
+                          if (secInputRef.current) secInputRef.current.value = s.toString();
+                        }}><PencilSquareIcon className="w-5 h-5" /></button>
+                        <button className="w-9 h-9 flex justify-center items-center text-white text-xl mx-1 rounded-full bg-red-400" onClick={() => removePhaseAtIndex(i)}><TrashIcon className="w-5 h-5" /></button>
+                      </div>
+                    }
+
+                  </div>
+                ))}
+              </div>
+
+            </div>
+          </>
+
+        ) : null
+      }
+    </div >
   );
 };
 
 export default Timer;
+
