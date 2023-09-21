@@ -13,6 +13,7 @@ import {
 import { DEFAULT_SETTINGS, DEFAULT_UPDATE_INTERVAL } from "../config/constants";
 import TimeDisplay from "./TimeDisplay";
 import { ms2hms, s2hms, s2ms, timeTransform } from "../utils/utils";
+import PhaseList from "./PhaseList";
 
 type TimerStateType = "init" | "running" | "paused" | "completed";
 
@@ -193,24 +194,7 @@ const Timer = () => {
   return (
     <div className="lg:w-[85%] md:w-[95%] sm:w-[98%] w-[35rem]flex flex-col items-center p-2">
       <TimeDisplay time={resultTime} />
-      <div className="w-[100%] min-h-16 rounded-2xl flex flex-wrap justify-center items-center md:px-4 sm:px-10 px-10 m-1">
-        {phaseList.map((p, i) => (
-          <div
-            key={i}
-            className="flex justify-center items-center my-1"
-            onClick={() =>
-              setPhaseList((prev) => prev.filter((p, idx) => idx !== i))
-            }
-          >
-            <div className={`${i === phase ? "phase-active" : "phase-inactive"}`} >
-              <p className="text-white ">{timeTransform(p, s2hms)}</p>
-            </div>
-            {i < phaseList.length - 1 ? <PlayIcon className="w-4 h-4 mx-1 text-white" /> : null}
-            {i === phaseList.length - 1 && !settings.loop ? <StopIcon className="w-4 h-4 mx-1 text-red-500" /> : null}
-            {i === phaseList.length - 1 && settings.loop ? <div className="w-4 h-4 flex justify-center items-center ml-2 rounded-full bg-green-600"><ArrowUturnRightIcon className="w-3 h-3 rotate-180 text-white" /></div> : null}
-          </div>
-        ))}
-      </div>
+      <PhaseList phaseList={phaseList} phase={phase} setPhaseList={setPhaseList} settings={settings} />
 
       <div className="w-[100%] flex justify-center items-center rounded-2xl mt-5">
         <div className="flex">{autoNextToggle}</div>
