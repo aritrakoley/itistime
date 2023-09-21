@@ -7,10 +7,13 @@ import {
   ArrowPathIcon,
   PlusIcon,
   XCircleIcon,
+  StopCircleIcon,
+  StopIcon,
 } from "@heroicons/react/24/solid";
 import { DEFAULT_SETTINGS, DEFAULT_UPDATE_INTERVAL } from "../config/constants";
 import TimeDisplay from "./TimeDisplay";
 import { ms2hms, s2hms, s2ms, timeTransform } from "../utils/utils";
+import PhaseList from "./PhaseList";
 
 type TimerStateType = "init" | "running" | "paused" | "completed";
 
@@ -33,7 +36,8 @@ const Timer = () => {
   const [timerState, setTimerState] = useState<TimerStateType>("init");
 
   useEffect(() => {
-    if (phaseList.length === 0) setResultTime(0);
+    console.log("---")
+    if (phaseList.length === 0) resetTimer();
 
     if (phase < phaseList.length) {
       setupTimer();
@@ -190,25 +194,7 @@ const Timer = () => {
   return (
     <div className="lg:w-[85%] md:w-[95%] sm:w-[98%] w-[35rem]flex flex-col items-center p-2">
       <TimeDisplay time={resultTime} />
-      <div className="w-[100%] h-16 rounded-2xl flex flex-wrap justify-center items-center md:px-4 sm:px-10 px-10 m-1">
-        {phaseList.map((p, i) => (
-          <div
-            key={i}
-            className="flex justify-center items-center"
-            onClick={() =>
-              setPhaseList((prev) => prev.filter((p, idx) => idx !== i))
-            }
-          >
-            <div className={`${i === phase ? "phase-active" : "phase-inactive"}`} >
-              <p className="text-white ">{timeTransform(p, s2hms)}</p>
-            </div>
-            {i < phaseList.length - 1 || settings.loop ? <PlayIcon className="w-4 h-4 mx-1 text-white" /> : null}
-          </div>
-        ))}
-        {phaseList.length && settings.loop ? (
-          <div className="flex items-center">{loopToggle}</div>
-        ) : null}
-      </div>
+      <PhaseList phaseList={phaseList} phase={phase} setPhaseList={setPhaseList} settings={settings} />
 
       <div className="w-[100%] flex justify-center items-center rounded-2xl mt-5">
         <div className="flex">{autoNextToggle}</div>
@@ -258,10 +244,10 @@ const Timer = () => {
               />
             </div>
             <button
-              className="z-9 w-48 h-14 flex flex-col items-center justify-end rounded-b-2xl shadow-sm font-bold text-2xl focus:outline-none focus:ring focus:ring-opacity-50 bg-violet-500 hover:bg-violet-700 text-white border-transparent focus:border-violet-300 mt-[-1.8rem] focus:ring-indigo-200 mb-2 pb-1"
+              className="z-9 w-48 h-16 flex flex-col items-center justify-end rounded-b-full shadow-sm focus:outline-none focus:ring focus:ring-opacity-50 bg-violet-500 hover:bg-violet-700 text-white border-transparent focus:border-violet-300 mt-[-1.8rem] focus:ring-indigo-200 mb-2 pb-1"
               onClick={handlePhaseInput}
             >
-              <PlusIcon className="w-6 h-6" />
+              <span className="mb-1">Add Phase</span>
             </button>
           </div>
 
