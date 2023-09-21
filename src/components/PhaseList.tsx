@@ -5,21 +5,15 @@ import { Dispatch, SetStateAction } from 'react';
 type PhaseListProps = {
     phaseList: number[];
     phase: number;
-    setPhaseList: Dispatch<SetStateAction<number[]>>;
+    handleManualPhaseChange: (p: number) => void;
     settings: any;
 }
 const PhaseList = (props: PhaseListProps) => {
-    const { phaseList, phase, setPhaseList, settings } = props;
+    const { phaseList, phase, handleManualPhaseChange, settings } = props;
     return (
         <div className="w-[100%] min-h-16 rounded-2xl flex flex-wrap justify-center items-center md:px-4 sm:px-10 px-10 m-1">
             {phaseList.map((p, i) => (
-                <div
-                    key={i}
-                    className="flex justify-center items-center my-1"
-                    onClick={() =>
-                        setPhaseList((prev) => prev.filter((p, idx) => idx !== i))
-                    }
-                >
+                <div key={i} className="flex justify-center items-center my-1" onClick={() => handleManualPhaseChange(i)}>
                     <div className={`${i === phase ? "phase-active" : "phase-inactive"}`} >
                         <p className="text-white ">{timeTransform(p, s2hms)}</p>
                     </div>
