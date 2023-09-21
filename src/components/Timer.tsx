@@ -48,7 +48,7 @@ const Timer = () => {
 
     if (phase < phaseList.length) {
       setupTimer();
-      if (settings.autostart_next_phase && !firstStart.current) {
+      if (settings.autostart_next_phase && !firstStart.current && timerState === 'running') {
         startTimer();
       }
     } else if (settings.loop) {
@@ -79,10 +79,21 @@ const Timer = () => {
     if (secInputRef.current) secInputRef.current.value = "";
 
     const newPhase = h * 3600 + m * 60 + s;
-    if (!newPhase) return
+    console.log(newPhase, index);
+    if (!newPhase) return;
     if (index == null) setPhaseList([...phaseList, newPhase]);
-    if (index && index >= 0 && index < phaseList.length) setPhaseList(phaseList.map((p, i) => i === index ? newPhase : p));
+    if (index != null && index >= 0 && index < phaseList.length) setPhaseList(phaseList.map((p, i) => i === index ? newPhase : p));
   };
+
+  const handlePhaseAdd = () => {
+    setIsEditMode(phaseList.length);
+    setPhaseList([...phaseList, 0]);
+  }
+
+  const handleManualPhaseChange = (p: number) => {
+    resetTimer();
+    setPhase(p);
+  }
 
   const removePhaseAtIndex = (idx: number) => {
     setPhaseList(prev => prev.filter((p, i) => i !== idx))
@@ -209,7 +220,7 @@ const Timer = () => {
   return (
     <div className="lg:w-[85%] md:w-[95%] z-10 sm:w-[98%] w-[35rem]flex flex-col items-center p-2">
       <TimeDisplay time={resultTime} />
-      <PhaseList phaseList={phaseList} phase={phase} setPhaseList={setPhaseList} settings={settings} />
+      <PhaseList phaseList={phaseList} phase={phase} handleManualPhaseChange={handleManualPhaseChange} settings={settings} />
 
       <div className="w-[100%] flex justify-center items-center rounded-2xl mt-5">
 
@@ -254,19 +265,19 @@ const Timer = () => {
                       : <div className="flex mx-1 text-white text-2xl">
                         <input
                           ref={hourInputRef}
-                          className="z-10 w-9 h-9 text-center text-gray-800 rounded-xl focus:outline-none mx-1"
+                          className="z-10 w-9 h-9 bg-slate-400 text-center placeholder:text-slate-100 rounded-xl focus:outline-none mx-1"
                           placeholder="h"
                         />
                         :
                         <input
                           ref={minInputRef}
-                          className="z-10 w-9 h-9 text-center text-gray-800 rounded-xl focus:outline-none mx-1"
+                          className="z-10 w-9 h-9 bg-slate-400 text-center placeholder:text-slate-100 rounded-xl focus:outline-none mx-1"
                           placeholder="m"
                         />
                         :
                         <input
                           ref={secInputRef}
-                          className="z-10 w-9 h-9 text-center text-gray-800 rounded-xl focus:outline-none mx-1"
+                          className="z-10 w-9 h-9 bg-slate-400 text-center placeholder:text-slate-100 rounded-xl focus:outline-none mx-1"
                           placeholder="s"
                         />
                       </div>}
@@ -289,6 +300,9 @@ const Timer = () => {
 
                   </div>
                 ))}
+                <button className="w-10 h-10 flex justify-center items-center mt-auto ml-auto items-center bg-green-500 rounded-l-full rounded-r-full p-1" onClick={handlePhaseAdd}>
+                  <PlusIcon className="w-7 h-7 text-white" />
+                </button>
               </div>
 
             </div>
